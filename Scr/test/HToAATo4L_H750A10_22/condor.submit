@@ -1,0 +1,11 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./Scr/test/HToAATo4L_H750A10_22/test.sh
+request_memory = 1000
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./Scr/test/HToAATo4L_H750A10_22/log/$(ProcId).out
+error = ./Scr/test/HToAATo4L_H750A10_22/log/$(ProcId).err
+log = ./Scr/test/HToAATo4L_H750A10_22/log/$(ProcId).log
++MaxRuntime = 36000
+Queue 100

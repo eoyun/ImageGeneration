@@ -1,0 +1,11 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./Scr/250407_v1/DYto2L_3J_MLMEE/test.sh
+request_memory = 1000
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./Scr/250407_v1/DYto2L_3J_MLMEE/log/$(ProcId).out
+error = ./Scr/250407_v1/DYto2L_3J_MLMEE/log/$(ProcId).err
+log = ./Scr/250407_v1/DYto2L_3J_MLMEE/log/$(ProcId).log
++MaxRuntime = 36000
+Queue 547

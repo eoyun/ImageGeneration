@@ -66,9 +66,9 @@ t.SetBranchStatus("dPhi",1)
 t.SetBranchStatus("dEta",1)
 
 # 출력 폴더 생성
-output_dir = f'/pnfs/knu.ac.kr/data/cms/store/user/yeo/ImageDataMergedEle/{outname}/{dataset}/{dataset}_{index}/'
+output_dir = f'./ImageDataMergedEle/{outname}/{dataset}/{dataset}_{index}/'
 
-csv_path = f"/pnfs/knu.ac.kr/data/cms/store/user/yeo/ImageDataMergedEle/{outname}/{dataset}/{dataset}_{index}.csv"
+csv_path = f"./ImageDataMergedEle/{outname}/{dataset}/{dataset}_{index}.csv"
 os.makedirs(output_dir, exist_ok=True)
 
 #if not os.path.exists(csv_path):
@@ -92,7 +92,6 @@ for idx in range(t.GetEntries()):
 
     dEta = np.array(t.dEta,dtype=np.float32)
     dPhi = np.array(t.dPhi,dtype=np.float32)
-
     # ROOT 배열을 NumPy 배열로 변환 (메모리 효율적)
     #EEarray = np.array([[t.EEImage[i][j] for j in range(len(t.EEImage[i]))] for i in range(len(t.EEImage))], dtype=np.float64,copy = True)
     #ES1array = np.array([[t.ES1Image[i][j] for j in range(len(t.ES1Image[i]))] for i in range(len(t.ES1Image))], dtype=np.float64,copy = True)
@@ -112,7 +111,7 @@ for idx in range(t.GetEntries()):
     gc.collect()
     #print_memory_usage(f"remove memory {idx} ")  # 메모리 확인
 
-
+    label = ''
     # 데이터 저장
     if t.NumEleHard > 1:
         label = 'mergedHard'

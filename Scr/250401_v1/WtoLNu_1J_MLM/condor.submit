@@ -1,0 +1,11 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./Scr/250401_v1/WtoLNu_1J_MLM/test.sh
+request_memory = 1000
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./Scr/250401_v1/WtoLNu_1J_MLM/log/$(ProcId).out
+error = ./Scr/250401_v1/WtoLNu_1J_MLM/log/$(ProcId).err
+log = ./Scr/250401_v1/WtoLNu_1J_MLM/log/$(ProcId).log
++MaxRuntime = 36000
+Queue 178
