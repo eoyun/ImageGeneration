@@ -1,0 +1,12 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./Scr/251031_v3/HToAATo4L_H250A10_22EE/test.sh
+request_memory = 500
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./Scr/251031_v3/HToAATo4L_H250A10_22EE/log/$(ProcId).out
+error = ./Scr/251031_v3/HToAATo4L_H250A10_22EE/log/$(ProcId).err
+log = ./Scr/251031_v3/HToAATo4L_H250A10_22EE/log/$(ProcId).log
+x509userproxy = /u/user/eoyun/proxy.cert
++MaxRuntime = 36000
+Queue 100

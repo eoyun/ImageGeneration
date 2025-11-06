@@ -1,0 +1,12 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./Scr/250818_v2/HToAATo4L_H250A5_2018/test.sh
+request_memory = 500
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./Scr/250818_v2/HToAATo4L_H250A5_2018/log/$(ProcId).out
+error = ./Scr/250818_v2/HToAATo4L_H250A5_2018/log/$(ProcId).err
+log = ./Scr/250818_v2/HToAATo4L_H250A5_2018/log/$(ProcId).log
+x509userproxy = /tmp/x509up_u$(id -u)
++MaxRuntime = 36000
+Queue 28

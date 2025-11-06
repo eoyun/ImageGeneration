@@ -1,0 +1,12 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./test.sh
+request_memory = 500
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./log/$(ProcId).out
+error = ./log/$(ProcId).err
+log = ./log/$(ProcId).log
+x509userproxy = /u/user/eoyun/proxy.cert
++MaxRuntime = 36000
+Queue 1

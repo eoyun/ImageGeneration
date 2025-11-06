@@ -51,7 +51,7 @@ for line in fp:
     filelist.append(line)
 print(filelist[index])
 inputfile = filelist[index]
-f1 = ROOT.TFile(inputfile, 'READ')
+f1 = ROOT.TFile.Open(inputfile)
 t = f1.Get('mergedLeptonIDImage/ImageTree')
 
 # 데이터 저장 리스트
@@ -62,6 +62,7 @@ t.SetBranchStatus("ES2Image", 1)
 t.SetBranchStatus("NumEle", 1)
 t.SetBranchStatus("NumEleHard", 1)
 t.SetBranchStatus("IsAddTrk", 1)
+t.SetBranchStatus("IsEleCleaningID", 1)
 t.SetBranchStatus("dPhi",1)
 t.SetBranchStatus("dEta",1)
 
@@ -114,11 +115,9 @@ for idx in range(t.GetEntries()):
 
 
     # 데이터 저장
-    if t.NumEleHard > 1:
+    if t.NumEleHard > 1 and t.IsEleCleaningID == 0:
         label = 'mergedHard'
-    elif t.NumEle > 1:
-        label = 'mergedNotHard'
-    elif t.NumEle == 1:
+    elif t.NumEleHard == 1:
         label = 'notMerged'
     else:
         label = 'notElectron'
@@ -150,7 +149,7 @@ for idx in range(t.GetEntries()):
 
 # 데이터프레임 생성 및 저장
 if data:
-    df = pd.DataFrame(data, columns=['NumEle', 'NumEleHard', 'IsAddTrk', 'ImagePath', 'Label', 'dPhi', 'dEta'])
+    df = pd.DataFrame(data, columns=['NumEle', 'NumEleHard', 'IsAddTrk', 'IsEleCleaningID', 'ImagePath', 'Label', 'dPhi', 'dEta'])
     df.to_csv(csv_path, mode='a', header=False, index=False)
 
 # ROOT 파일 닫기
