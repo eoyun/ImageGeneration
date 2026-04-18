@@ -10,15 +10,18 @@ from ROOT import TChain
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--index", dest="index", action="store")
-parser.add_argument("-d", "--dataset", dest="dataset", action="store")
-parser.add_argument("-o", "--outname", dest="outname", action="store")
-parser.add_argument("-l", "--lines", dest="lines", action="store")
+parser.add_argument("-i", "--index", dest="index", type=int, default=0)
+parser.add_argument("-d", "--dataset", dest="dataset", default="DYto2L_1J_MLM")
+parser.add_argument("-o", "--outname", dest="outname", default="260218_v1")
+parser.add_argument("-l", "--lines", dest="lines", type=int, default=None)
+parser.add_argument(
+    "--input-dat",
+    dest="input_dat",
+    default=None,
+    help="Path to .dat input file. If not set, use ./input/<outname>/<dataset>.dat",
+)
 args = parser.parse_args()
 
-import cv2
-import gc
-import numpy as np
 
 def normalize_image(img, method="log", out_max=255.0, q=99.5, alpha=1.0, eps=1e-12):
     img = img.astype(np.float32)
@@ -58,7 +61,7 @@ def normalize_image(img, method="log", out_max=255.0, q=99.5, alpha=1.0, eps=1e-
         raise ValueError(f"Unknown normalization method: {method}")
 
 
-def ImageResize(EEImage, ES1Image, ES2Image, norm_method="max",alpha_n = 10000):
+def ImageResize(EEImage, ES1Image, ES2Image, norm_method="max", alpha_n=10000):
     EEImageResize = cv2.resize(
         EEImage,
         (EEImage.shape[1] * 14, EEImage.shape[0] * 14),
@@ -79,19 +82,18 @@ def ImageResize(EEImage, ES1Image, ES2Image, norm_method="max",alpha_n = 10000):
     )
     ES2ImageResize = np.pad(ES2ImageResize, pad_width=1, mode='constant')
 
-    EEImageResize = normalize_image(EEImageResize, method=norm_method, alpha = alpha_n)
-    ES1ImageResize = normalize_image(ES1ImageResize, method=norm_method, alpha = alpha_n)
-    ES2ImageResize = normalize_image(ES2ImageResize, method=norm_method, alpha = alpha_n)
+    EEImageResize = normalize_image(EEImageResize, method=norm_method, alpha=alpha_n)
+    ES1ImageResize = normalize_image(ES1ImageResize, method=norm_method, alpha=alpha_n)
+    ES2ImageResize = normalize_image(ES2ImageResize, method=norm_method, alpha=alpha_n)
 
     total_img = np.stack((EEImageResize, ES1ImageResize, ES2ImageResize), axis=2).astype(np.float64)
-    print(total_img)
     del EEImageResize, ES1ImageResize, ES2ImageResize
     gc.collect()
 
     return total_img
 
+
 def parse_mass_from_path(file_path, prefix):
-    # ex) ...H500..., ...A0p4... -> 500.0, 0.4
     match = re.search(rf"{prefix}([0-9]+(?:p[0-9]+)?)", file_path)
     if not match:
         return np.nan
@@ -157,9 +159,13 @@ def main():
     dataset = args.dataset
     outname = args.outname
     index = int(args.index)
-    lines = int(args.lines)
 
-    filelist = get_filelist(f"./input/{outname}/{dataset}.dat")
+    dat_path = args.input_dat if args.input_dat else f"./input/{outname}/{dataset}.dat"
+    filelist = get_filelist(dat_path)
+
+    lines = int(args.lines) if args.lines is not None else len(filelist)
+    if lines <= 0:
+        raise ValueError("lines must be > 0")
 
     file_num = 10
     if lines // 10 == index:
@@ -167,7 +173,10 @@ def main():
 
     chain = TChain("mergedLeptonIDImage/ImageTree")
     for i in range(file_num):
-        input_file = filelist[index * 10 + i]
+        file_idx = index * 10 + i
+        if file_idx >= len(filelist):
+            break
+        input_file = filelist[file_idx]
         print(input_file)
         chain.Add(input_file)
 
