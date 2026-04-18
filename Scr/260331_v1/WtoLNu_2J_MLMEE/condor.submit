@@ -1,0 +1,13 @@
+# Unix submit description file
+Universe = vanilla
+Executable = ./Scr/260331_v1/WtoLNu_2J_MLMEE/test.sh
+request_memory = 1000
+should_transfer_files   = Yes
+arguments = $(ProcId)
+output = ./Scr/260331_v1/WtoLNu_2J_MLMEE/log/$(ProcId).out
+error = ./Scr/260331_v1/WtoLNu_2J_MLMEE/log/$(ProcId).err
+log = ./Scr/260331_v1/WtoLNu_2J_MLMEE/log/$(ProcId).log
+x509userproxy = /u/user/eoyun/proxy.cert
++MaxRuntime = 36000
++JobBatchName = "260331_v1_WtoLNu_2J_MLMEE"
+Queue 67

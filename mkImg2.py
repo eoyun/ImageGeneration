@@ -79,6 +79,7 @@ t.SetBranchStatus("dPhi",1)
 t.SetBranchStatus("dEta",1)
 t.SetBranchStatus("pT",1)
 t.SetBranchStatus("genDR",1)
+t.SetBranchStatus("weight",1)
 
 # 출력 폴더 생성
 #output_dir = f'/pnfs/knu.ac.kr/data/cms/store/user/yeo/ImageDataMergedEle/{outname}/{dataset}/{dataset}_{index}/'
@@ -98,7 +99,7 @@ data = []
 #for idx, itree in enumerate(t):
 for idx in range(t.GetEntries()):
     t.GetEntry(idx)
-    if t.IsAddTrk == 1:
+    if t.IsAddTrk == 0:
         continue  # 조건 만족하지 않으면 스킵
     #print_memory_usage(f"Loop {idx} 시작")  # 메모리 확인
     
@@ -140,7 +141,7 @@ for idx in range(t.GetEntries()):
     else:
         label = 'notElectron'
     
-    data.append([t.NumEle, t.NumEleHard, t.IsAddTrk, t.IsEleCleaningID, file_path, label, dPhi, dEta, t.pT, Esum, t.genDR])
+    data.append([t.NumEle, t.NumEleHard, t.IsAddTrk, t.IsEleCleaningID, file_path, label, dPhi, dEta, t.pT, Esum, t.genDR, t.weight])
     # 일정 개수마다 CSV로 저장 후 리스트 초기화
     #if idx % 1000 == 0:
     #    print(str(idx)+" evts process")
@@ -158,7 +159,7 @@ for idx in range(t.GetEntries()):
     #    #print_memory_usage(f"ROOT 파일 다시 열기 {idx}")
 
     if len(data) >= batch_size:
-        df = pd.DataFrame(data, columns=['NumEle', 'NumEleHard', 'IsAddTrk','IsEleCleaningID', 'ImagePath', 'Label','dPhi','dEta','pT','E5x5',"dR"])
+        df = pd.DataFrame(data, columns=['NumEle', 'NumEleHard', 'IsAddTrk','IsEleCleaningID', 'ImagePath', 'Label','dPhi','dEta','pT','E5x5',"dR", "weight"])
         df.to_csv(csv_path, mode='a', header=False, index=False)
         data = []  # 리스트 초기화
         gc.collect()  # 메모리 해제
@@ -167,7 +168,7 @@ for idx in range(t.GetEntries()):
 
 # 데이터프레임 생성 및 저장
 if data:
-    df = pd.DataFrame(data, columns=['NumEle', 'NumEleHard', 'IsAddTrk', 'IsEleCleaningID', 'ImagePath', 'Label', 'dPhi', 'dEta','pT','E5x5','dR'])
+    df = pd.DataFrame(data, columns=['NumEle', 'NumEleHard', 'IsAddTrk', 'IsEleCleaningID', 'ImagePath', 'Label', 'dPhi', 'dEta','pT','E5x5','dR', 'weight'])
     df.to_csv(csv_path, mode='a', header=False, index=False)
 
 # ROOT 파일 닫기

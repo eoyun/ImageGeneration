@@ -2,7 +2,8 @@ test single datafile
 python3 draw_pt.py -i 2 -d HToAATo4L_H750A5_22 -o 251106_v5 -l 100
 
 submit condor
-python3 submit.py -o test -s mkimg2.py -d 260311
+python3 submit.py -o test -s mkImg2.py -d 260311
 
 #260311 barrel image
-#260221 endcap image
+#260223 endcap image
+#260401 endcap image add weight
